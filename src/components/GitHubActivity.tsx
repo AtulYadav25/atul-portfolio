@@ -4,31 +4,50 @@ import { useEffect, useState } from "react";
 interface ContributionDay {
   date: string;
   count: number;
+  level: number;
 }
 
 export function GitHubActivity() {
   const [contributions, setContributions] = useState<ContributionDay[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Generate mock data for GitHub activity (52 weeks)
-    const mockData: ContributionDay[] = [];
-    const today = new Date();
-    for (let i = 364; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      mockData.push({
-        date: date.toISOString().split("T")[0],
-        count: Math.floor(Math.random() * 10),
-      });
-    }
-    setContributions(mockData);
+    const fetchGitHubActivity = async () => {
+      try {
+        const username = "AtulYadav25";
+        const response = await fetch(
+          `https://github-contributions-api.jogruber.de/v4/${username}?y=last`
+        );
+        const data = await response.json();
+        
+        // Transform the API response to our format
+        const contributionData: ContributionDay[] = [];
+        data.contributions.forEach((contribution: any) => {
+          contributionData.push({
+            date: contribution.date,
+            count: contribution.count,
+            level: contribution.level,
+          });
+        });
+        
+        setContributions(contributionData);
+      } catch (error) {
+        console.error("Error fetching GitHub activity:", error);
+        // Fallback to empty array on error
+        setContributions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGitHubActivity();
   }, []);
 
-  const getIntensity = (count: number) => {
-    if (count === 0) return "bg-muted/50";
-    if (count <= 3) return "bg-[#0e4429] dark:bg-[#0e4429]";
-    if (count <= 6) return "bg-[#006d32] dark:bg-[#006d32]";
-    if (count <= 8) return "bg-[#26a641] dark:bg-[#26a641]";
+  const getIntensity = (level: number) => {
+    if (level === 0) return "bg-muted/50";
+    if (level === 1) return "bg-[#0e4429] dark:bg-[#0e4429]";
+    if (level === 2) return "bg-[#006d32] dark:bg-[#006d32]";
+    if (level === 3) return "bg-[#26a641] dark:bg-[#26a641]";
     return "bg-[#39d353] dark:bg-[#39d353]";
   };
 
@@ -62,25 +81,35 @@ export function GitHubActivity() {
           Recent GitHub activity — consistent commits & OSS contributions
         </p>
 
-        <div className="overflow-x-auto">
-          <motion.div
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="inline-grid grid-flow-col grid-rows-7 gap-1 sm:gap-1.5"
-          >
-            {contributions.map((day, index) => (
-              <motion.div
-                key={index}
-                variants={item}
-                className={`h-2.5 w-2.5 rounded-[2px] border border-border/20 ${getIntensity(day.count)} sm:h-3 sm:w-3`}
-                title={`${day.date}: ${day.count} contributions`}
-                aria-label={`${day.count} contributions on ${day.date}`}
-              />
-            ))}
-          </motion.div>
-        </div>
+        {loading ? (
+          <div className="text-center text-sm text-muted-foreground">
+            Loading activity...
+          </div>
+        ) : contributions.length > 0 ? (
+          <div className="overflow-x-auto">
+            <motion.div
+              variants={container}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="inline-grid grid-flow-col grid-rows-7 gap-1 sm:gap-1.5"
+            >
+              {contributions.map((day, index) => (
+                <motion.div
+                  key={index}
+                  variants={item}
+                  className={`h-2.5 w-2.5 rounded-[2px] border border-border/20 ${getIntensity(day.level)} sm:h-3 sm:w-3`}
+                  title={`${day.date}: ${day.count} contributions`}
+                  aria-label={`${day.count} contributions on ${day.date}`}
+                />
+              ))}
+            </motion.div>
+          </div>
+        ) : (
+          <div className="text-center text-sm text-muted-foreground">
+            Unable to load GitHub activity
+          </div>
+        )}
       </motion.div>
     </section>
   );
