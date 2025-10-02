@@ -48,7 +48,7 @@ export default function Blog() {
             >
               {blogs.map((blog) => (
                 <motion.div key={blog.slug} variants={item} whileHover={{ x: 8 }}>
-                  <Link to={`/blog/${blog.slug}`}>
+                  <Link to={`/blog/${blog.slug}`} onClick={() => window.scrollTo(0, 0)}>
                     <Card className="border-border bg-card transition-shadow hover:shadow-lg">
                       <CardHeader>
                         <div className="flex items-start justify-between gap-4">

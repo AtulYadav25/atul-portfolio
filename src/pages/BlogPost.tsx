@@ -5,10 +5,15 @@ import { Home, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
 import ReactMarkdown from "react-markdown";
+import { useEffect } from "react";
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const blog = blogs.find((b) => b.slug === slug);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
 
   if (!blog) {
     return (

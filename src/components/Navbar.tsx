@@ -1,12 +1,22 @@
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsAtTop(window.scrollY < 50);
+    };
+    
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navLinks = [
     { label: "About", href: "#about" },
@@ -35,7 +45,11 @@ export function Navbar() {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg"
+        className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+          isAtTop 
+            ? "border-transparent bg-transparent backdrop-blur-none" 
+            : "border-border/40 bg-background/80 backdrop-blur-lg"
+        }`}
       >
         <div className="mx-auto flex h-16 max-w-[980px] items-center justify-between px-4 sm:px-6">
           <button
@@ -43,7 +57,7 @@ export function Navbar() {
             className="flex items-center gap-3 transition-opacity hover:opacity-80"
             aria-label="Scroll to top"
           >
-            <div className="h-10 w-10 overflow-hidden rounded-full bg-gradient-to-br from-primary to-accent">
+            <div className="h-10 w-10 overflow-hidden rounded-full bg-gradient-to-br from-foreground to-foreground/80">
               <img
                 src="https://github.com/AtulYadav25.png"
                 alt="Atul Yadav"
@@ -133,7 +147,7 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.05 }}
                   onClick={() => handleNavClick(link.href)}
-                  className="text-2xl font-semibold text-foreground transition-colors hover:text-primary"
+                  className="text-2xl font-semibold text-foreground transition-colors hover:text-foreground/80"
                 >
                   {link.label}
                 </motion.button>

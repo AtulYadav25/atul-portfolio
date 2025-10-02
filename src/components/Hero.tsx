@@ -38,7 +38,7 @@ export function Hero() {
         >
           Hi — I'm Atul.
           <br />
-          <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <span className="text-foreground">
             I build reliable, beautiful full-stack web apps.
           </span>
         </motion.h1>

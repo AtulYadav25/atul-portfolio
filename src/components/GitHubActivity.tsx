@@ -25,11 +25,11 @@ export function GitHubActivity() {
   }, []);
 
   const getIntensity = (count: number) => {
-    if (count === 0) return "bg-muted";
-    if (count <= 3) return "bg-primary/20";
-    if (count <= 6) return "bg-primary/40";
-    if (count <= 8) return "bg-primary/60";
-    return "bg-primary/80";
+    if (count === 0) return "bg-muted/50";
+    if (count <= 3) return "bg-[#0e4429] dark:bg-[#0e4429]";
+    if (count <= 6) return "bg-[#006d32] dark:bg-[#006d32]";
+    if (count <= 8) return "bg-[#26a641] dark:bg-[#26a641]";
+    return "bg-[#39d353] dark:bg-[#39d353]";
   };
 
   const container = {
@@ -74,7 +74,7 @@ export function GitHubActivity() {
               <motion.div
                 key={index}
                 variants={item}
-                className={`h-2.5 w-2.5 rounded-sm ${getIntensity(day.count)} sm:h-3 sm:w-3`}
+                className={`h-2.5 w-2.5 rounded-[2px] border border-border/20 ${getIntensity(day.count)} sm:h-3 sm:w-3`}
                 title={`${day.date}: ${day.count} contributions`}
                 aria-label={`${day.count} contributions on ${day.date}`}
               />
