@@ -47,9 +47,9 @@ export function Hero() {
           variants={item}
           className="mx-auto mb-8 max-w-2xl text-base text-muted-foreground sm:text-lg md:text-xl"
         >
-          I'm a Full-Stack Developer specializing in modern web apps with Next.js, Tailwind,
-          and scalable backends. I build production-ready products that ship fast and scale
-          well — from clean UI to robust APIs.
+          I'm a Full-Stack Developer specializing in modern Frontend apps and scalable backends. I build production-ready products that ship fast and scale
+          well — from clean UI to robust APIs. I'm building on the web 3.0 revolution with
+          blockchain integrations and decentralized apps.
         </motion.p>
 
         <motion.div
